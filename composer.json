@@ -1,0 +1,23 @@
+{
+  "name": "igormakarov/kyivstar.sms.api.php.client",
+  "description": "Бібліотека для роботи з Київстар СМС API",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Makarov Igor",
+      "email": "igormakarov1991@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "igormakarov\\KyivstarSms\\" : "src"
+    }
+  },
+  "require": {
+    "php": ">=7.4.3",
+    "guzzlehttp/guzzle": "^6.3",
+    "ext-json": "*"
+  }
+}
