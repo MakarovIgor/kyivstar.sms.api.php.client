@@ -1,4 +1,4 @@
 composer.phar
-/vendor/
+vendor
 .phpunit.result.cache
 test.php
