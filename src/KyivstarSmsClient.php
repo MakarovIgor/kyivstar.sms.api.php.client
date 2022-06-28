@@ -14,7 +14,6 @@ class KyivstarSmsClient
 {
     private Client $httpClient;
     private string $apiServerUrl;
-    //private string $token;
     private array $requestOptions;
 
     public function __construct(string $apiServerUrl, string $token)
@@ -40,7 +39,9 @@ class KyivstarSmsClient
             $this->requestOptions
         );
         $this->validateResponse($response);
-        return json_decode($response->getBody()->getContents(), true);
+        $decodeResponse = json_decode($response->getBody()->getContents(), true);
+        $isNotDelivered = isset($decodeResponse['errorCode']) && $decodeResponse['errorCode'] == 1040;
+        return ($isNotDelivered) ? MessageStatus::$NOT_DELIVERED_OR_MASSAGE_ID_NOT_EXIST : $decodeResponse['status'];
     }
 
     /**
@@ -63,7 +64,7 @@ class KyivstarSmsClient
     public function validateResponse(ResponseInterface $response)
     {
         $content = json_decode($response->getBody()->getContents(), true);
-        var_dump("error", $content);
+
         switch ($response->getStatusCode()) {
             case 401: throw new UnauthorizedException($content['error']['message'], 401);
             case 422: throw new Exception($content['errorMsg'], (int)['errorCode']);
