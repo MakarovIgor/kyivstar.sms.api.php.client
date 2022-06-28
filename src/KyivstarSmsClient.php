@@ -40,8 +40,7 @@ class KyivstarSmsClient
         );
         $this->validateResponse($response);
         $decodeResponse = json_decode($response->getBody()->getContents(), true);
-        $isNotDelivered = isset($decodeResponse['errorCode']) && $decodeResponse['errorCode'] == 1040;
-        return ($isNotDelivered) ? MessageStatus::$NOT_DELIVERED_OR_MASSAGE_ID_NOT_EXIST : $decodeResponse['status'];
+        return $decodeResponse['status'] ?? MessageStatus::$NOT_DELIVERED_OR_MASSAGE_ID_NOT_EXIST;
     }
 
     /**
