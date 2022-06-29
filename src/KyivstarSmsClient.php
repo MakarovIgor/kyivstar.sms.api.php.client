@@ -66,7 +66,7 @@ class KyivstarSmsClient
 
         switch ($response->getStatusCode()) {
             case 401: throw new UnauthorizedException($content['error']['message'], 401);
-            case 422: throw new Exception($content['errorMsg'], (int)['errorCode']);
+            case 422: throw new Exception($content['errorMsg'], (int)$content['errorCode']);
         }
         $response->getBody()->seek(0);
     }
