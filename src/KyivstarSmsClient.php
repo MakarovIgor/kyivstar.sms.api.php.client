@@ -5,7 +5,9 @@ namespace igormakarov\KyivstarSms;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use igormakarov\KyivstarSms\Exceptions\BadRequestException;
 use igormakarov\KyivstarSms\Exceptions\UnauthorizedException;
+use igormakarov\KyivstarSms\Exceptions\UnprocessableEntity;
 use igormakarov\KyivstarSms\Routes\Route;
 use igormakarov\KyivstarSms\Routes\Sms;
 use Psr\Http\Message\ResponseInterface;
@@ -63,10 +65,18 @@ class KyivstarSmsClient
     public function validateResponse(ResponseInterface $response)
     {
         $content = json_decode($response->getBody()->getContents(), true);
+        $responseCode = $response->getStatusCode();
 
-        switch ($response->getStatusCode()) {
-            case 401: throw new UnauthorizedException($content['error']['message'], 401);
-            case 422: throw new Exception($content['errorMsg'], (int)$content['errorCode']);
+        switch ($responseCode) {
+            case 400:
+                throw new BadRequestException(
+                    $content['errorMsg'],
+                    empty($content['errorCode']) ? $responseCode : $content['errorCode']
+                );
+            case 401:
+                throw new UnauthorizedException($content['error']['message'], $responseCode);
+            case 422:
+                throw new UnprocessableEntity($content['errorMsg'], (int)$content['errorCode']);
         }
         $response->getBody()->seek(0);
     }
