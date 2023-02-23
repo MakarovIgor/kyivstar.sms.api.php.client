@@ -64,8 +64,11 @@ class KyivstarSmsClient
      */
     public function validateResponse(ResponseInterface $response)
     {
-        $content = json_decode($response->getBody()->getContents(), true);
         $responseCode = $response->getStatusCode();
+        if ($responseCode === 200)
+            return;
+        
+        $content = json_decode($response->getBody()->getContents(), true);
 
         switch ($responseCode) {
             case 400:
@@ -77,6 +80,8 @@ class KyivstarSmsClient
                 throw new UnauthorizedException($content['error']['message'], $responseCode);
             case 422:
                 throw new UnprocessableEntity($content['errorMsg'], (int)$content['errorCode']);
+            default:
+                throw new Exception($content['errorMsg'] ?? 'Unknown error', (int)$content['errorCode'] ?? 0);
         }
         $response->getBody()->seek(0);
     }
