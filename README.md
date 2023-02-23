@@ -22,7 +22,7 @@ try {
     $accessToken = $kyivstarAuth->getToken('clientId', 'secretKey');
 
     $client = new KyivstarSmsClient($url, $accessToken['access_token']);
-    $msgId = $client->sendSms(new Message("messagedesk", "+380679040443", "це тест"));
+    $msgId = $client->sendSms(new Message("messagedesk", "+380679000000", "це тест"));
     $status = $client->deliveryStatusSms($msgId);
     var_dump($status);
 } catch (Exception $ex) {
