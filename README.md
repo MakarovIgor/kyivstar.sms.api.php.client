@@ -5,6 +5,7 @@
 https://api-gateway.kyivstar.ua/#overview
 
 #### Приклад коду
+```php
 <?php
 
 use igormakarov\KyivstarSms\Exceptions\UnauthorizedException;
@@ -28,3 +29,4 @@ try {
     var_dump("code ", $ex->getCode());
     var_dump("message ", $ex->getMessage());
 }
+```
